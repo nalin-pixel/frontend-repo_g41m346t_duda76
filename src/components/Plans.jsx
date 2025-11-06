@@ -1,5 +1,6 @@
-import { Salad, Flame, Dumbbell } from "lucide-react";
-import { motion } from "framer-motion";
+import { Salad, Flame, Dumbbell, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const plans = [
   {
@@ -32,6 +33,19 @@ const plans = [
 ];
 
 export default function Plans() {
+  const [selected, setSelected] = useState(null);
+
+  const handleChoose = (p) => {
+    setSelected(p.id);
+    // Fire a cross-component event so other sections can react
+    window.dispatchEvent(
+      new CustomEvent("planSelected", { detail: { id: p.id, title: p.title } })
+    );
+    // Smooth scroll to signup
+    const auth = document.getElementById("auth");
+    if (auth) auth.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <section id="plans" className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-20">
@@ -54,16 +68,26 @@ export default function Plans() {
           {plans.map((p, idx) => (
             <motion.article
               key={p.id}
+              layout
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: idx * 0.06 }}
-              className="rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              onClick={() => handleChoose(p)}
+              className={`relative cursor-pointer rounded-2xl border p-6 shadow-sm transition-all ${
+                selected === p.id
+                  ? "border-emerald-300 shadow-lg ring-2 ring-emerald-400/50"
+                  : "border-gray-200 hover:shadow-md"
+              }`}
+              animate={{ scale: selected === p.id ? 1.02 : 1 }}
             >
-              <div className={`inline-flex items-center gap-3 rounded-xl bg-gradient-to-r ${p.color} px-3 py-2 text-white`}>
+              <div
+                className={`inline-flex items-center gap-3 rounded-xl bg-gradient-to-r ${p.color} px-3 py-2 text-white`}
+              >
                 <p.icon className="h-5 w-5" />
                 <span className="font-semibold">{p.title}</span>
               </div>
+
               <p className="mt-4 text-gray-700">{p.desc}</p>
               <p className="mt-4 text-2xl font-bold">{p.price}</p>
               <ul className="mt-4 space-y-2 text-sm text-gray-700">
@@ -73,9 +97,39 @@ export default function Plans() {
                   </li>
                 ))}
               </ul>
-              <a href="#auth" className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 transition">
-                Choose {p.title}
-              </a>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChoose(p);
+                }}
+                className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 font-medium text-white transition ${
+                  p.id === "gain"
+                    ? "bg-orange-600 hover:bg-orange-700"
+                    : p.id === "balanced"
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-emerald-600 hover:bg-emerald-700"
+                }`}
+              >
+                <span>Choose {p.title}</span>
+              </button>
+
+              <AnimatePresence>
+                {selected === p.id && (
+                  <motion.div
+                    key="badge"
+                    initial={{ opacity: 0, scale: 0.8, y: -6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: -6 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                    className="absolute -right-2 -top-2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-emerald-700 shadow-md"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="text-xs font-semibold">Selected</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.article>
           ))}
         </div>
