@@ -1,4 +1,5 @@
 import { Mail, Phone } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function AuthCTA() {
   const whatsappNumber = "15551234567"; // change to your business number (digits only)
@@ -7,7 +8,12 @@ export default function AuthCTA() {
     <section id="auth" className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-10 lg:grid-cols-2">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Create your account
             </h2>
@@ -40,9 +46,15 @@ export default function AuthCTA() {
                 By continuing you agree to our Terms and Privacy Policy.
               </p>
             </form>
-          </div>
+          </motion.div>
 
-          <div className="rounded-2xl border border-gray-200 p-6 shadow-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="rounded-2xl border border-gray-200 p-6 shadow-sm"
+          >
             <h3 className="text-xl font-semibold text-gray-900">Prefer WhatsApp?</h3>
             <p className="mt-2 text-gray-600">
               Tap below to chat with our nutrition team about the right plan for you.
@@ -59,7 +71,7 @@ export default function AuthCTA() {
             <p className="mt-2 text-xs text-gray-500">
               We typically reply within a few minutes during business hours.
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

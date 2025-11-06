@@ -1,4 +1,5 @@
 import { Salad, Flame, Dumbbell } from "lucide-react";
+import { motion } from "framer-motion";
 
 const plans = [
   {
@@ -34,18 +35,31 @@ export default function Plans() {
   return (
     <section id="plans" className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-20">
-        <div className="mb-10 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="mb-10 text-center"
+        >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Pick a plan that fits your goal
           </h2>
           <p className="mt-3 text-gray-600">
             Fresh meals delivered 2–3 times per week. Pause, skip, or cancel anytime.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {plans.map((p) => (
-            <article key={p.id} className="rounded-2xl border border-gray-200 p-6 shadow-sm">
+          {plans.map((p, idx) => (
+            <motion.article
+              key={p.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: idx * 0.06 }}
+              className="rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+            >
               <div className={`inline-flex items-center gap-3 rounded-xl bg-gradient-to-r ${p.color} px-3 py-2 text-white`}>
                 <p.icon className="h-5 w-5" />
                 <span className="font-semibold">{p.title}</span>
@@ -62,7 +76,7 @@ export default function Plans() {
               <a href="#auth" className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 transition">
                 Choose {p.title}
               </a>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
